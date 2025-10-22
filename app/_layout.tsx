@@ -55,6 +55,16 @@ export default function Layout() {
             ),
           }}
         />
+        <Drawer.Screen
+          name="test"
+          options={{
+            title: "",
+            drawerLabel: "Test",
+            drawerIcon: ({ color, size }: DrawerIconProps) => (
+              <MaterialCommunityIcons name="home" size={size} color={color} />
+            ),
+          }}
+        />
       </Drawer>
       {/* </SQLiteProvider>
     // </Suspense> */}

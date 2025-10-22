@@ -1,5 +1,5 @@
 import { CardType, SelectedCard } from "@/utils/types";
-import { useIsFocused } from "@react-navigation/native";
+import { useIsFocused, useNavigationState } from "@react-navigation/native";
 import clsx from "clsx";
 import { useNavigation } from "expo-router";
 import { useState } from "react";
@@ -16,7 +16,9 @@ const SUITS = {
 const Test = () => {
   const isFocused = useIsFocused();
   const navigation = useNavigation();
+  const navState = useNavigationState((state) => state);
   if (!navigation) return null;
+
   const [selectedCards, setSelectedCards] = useState<SelectedCard[]>([]);
 
   const cards: CardType[] = [
@@ -39,6 +41,7 @@ const Test = () => {
   const handleCardClick = (card: CardType) => {
     if (!card?.id) return;
     try {
+      if (!navState) return null;
       setSelectedCards((prev) => {
         const alreadySelected = prev.find((sc) => sc.card?.id === card.id);
         return alreadySelected

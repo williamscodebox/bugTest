@@ -1,5 +1,4 @@
 import { CardType, SelectedCard } from "@/utils/types";
-import { Link } from "expo-router";
 import { useState } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
@@ -80,9 +79,9 @@ const TestScreen = () => {
           </Pressable>
         );
       })}
-      <View className="m-8 p-8">
+      {/* <View className="m-8 p-8">
         <Link href="/(game)/test">Go to Game Index</Link>
-      </View>
+      </View> */}
     </View>
   );
 };
