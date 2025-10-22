@@ -1,0 +1,29 @@
+npm install -g eas-cli
+
+npx eas init
+
+first one below is for a production build
+second one is for a development build
+
+npx eas build --platform android 
+npx eas build --platform android --profile development
+
+************************************************************************
+to reset cache
+npx expo start --clear
+
+************************************************************************
+
+npx expo install --check
+npx expo install --fix
+npx expo-doctor
+
+************************************************************************
+
+https://rn-carousel.dev/
+
+
+Account has used its Android builds from the Free plan this month, will reset in 13 days (on Sat Nov 01 2025)
+
+
+https://icons.expo.fyi/Index
