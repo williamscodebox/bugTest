@@ -1,24 +1,32 @@
 // import { openAndInitDatabase } from "@/utils/db";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Drawer } from "expo-router/drawer";
 // import { SQLiteProvider } from "expo-sqlite";
 // import { Suspense } from "react";
 import CustomDrawer from "@/components/CustomDrawer";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { DrawerContentComponentProps } from "@react-navigation/drawer";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import "../global.css";
 
 type DrawerIconProps = { color: string; size: number };
 
-export default function RootLayout() {
+export default function Layout() {
+  const drawerItems = [
+    {
+      key: "home",
+      name: "index",
+      label: "Home",
+      icon: "home",
+    },
+  ];
   return (
     <SafeAreaProvider>
       {/* <Suspense fallback={<Text></Text>}>
-        <SQLiteProvider
-          databaseName="dbhf.db"
-          onInit={openAndInitDatabase}
-          useSuspense
-        > */}
+    //     <SQLiteProvider
+    //       databaseName="dbhf.db"
+    //       onInit={openAndInitDatabase}
+    //       useSuspense
+    //     > */}
       <Drawer
         drawerContent={(props: DrawerContentComponentProps) => (
           <CustomDrawer {...props} />
@@ -47,58 +55,9 @@ export default function RootLayout() {
             ),
           }}
         />
-        <Drawer.Screen
-          name="tutorial"
-          options={{
-            title: "",
-            drawerLabel: "Tutorial",
-            drawerIcon: ({ color, size }: DrawerIconProps) => (
-              <MaterialCommunityIcons
-                name="book-open-page-variant"
-                size={size}
-                color={color}
-              />
-            ),
-          }}
-        />
-        <Drawer.Screen
-          name="newgame"
-          options={{
-            title: "",
-            drawerLabel: "New Game",
-            drawerIcon: ({ color, size }: DrawerIconProps) => (
-              <MaterialCommunityIcons
-                name="play-circle-outline"
-                size={size}
-                color={color}
-              />
-            ),
-          }}
-        />
-        <Drawer.Screen
-          name="history"
-          options={{
-            title: "",
-            drawerLabel: "History",
-            drawerIcon: ({ color, size }: DrawerIconProps) => (
-              <MaterialCommunityIcons
-                name="trophy-outline"
-                size={size}
-                color={color}
-              />
-            ),
-          }}
-        />
-        <Drawer.Screen
-          name="game/[id]"
-          options={{
-            title: "",
-            drawerItemStyle: { display: "none" }, // 👈 Hides from drawer
-          }}
-        />
       </Drawer>
       {/* </SQLiteProvider>
-      </Suspense> */}
+    // </Suspense> */}
     </SafeAreaProvider>
   );
 }

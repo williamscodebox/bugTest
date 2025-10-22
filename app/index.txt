@@ -1,6 +1,4 @@
 import { CardType, SelectedCard } from "@/utils/types";
-import clsx from "clsx";
-import { Link } from "expo-router";
 import { useState } from "react";
 import { Pressable, Text, View } from "react-native";
 
@@ -33,54 +31,60 @@ const TestScreen = () => {
   ];
 
   const handleCardClick = (card: CardType) => {
+    console.log("Clicked card:", card);
     if (!card?.id) return;
-    try {
-      setSelectedCards((prev) => {
-        const alreadySelected = prev.find((sc) => sc.card?.id === card.id);
-        return alreadySelected
-          ? prev.filter((sc) => sc.card?.id !== card.id)
-          : [...prev, { card }];
-      });
-    } catch (err) {
-      console.error("Card press crash:", err);
-    }
+
+    setSelectedCards((prev) => {
+      const alreadySelected = prev.find((sc) => sc.card?.id === card.id);
+
+      return alreadySelected
+        ? prev.filter((sc) => sc.card?.id !== card.id)
+        : [...prev, { card }];
+    });
+
+    // if (!card || typeof card.id !== "string") return;
+
+    // setSelectedCards((prev) => {
+    //   if (!Array.isArray(prev)) return [{ card }]; // fallback if state is corrupted
+
+    //   const alreadySelected = prev.some((sc) => sc?.card?.id === card.id);
+    //   return alreadySelected
+    //     ? prev.filter((sc) => sc?.card?.id !== card.id)
+    //     : [...prev, { card }];
+    // });
   };
 
   return (
     <View className="flex-row flex-wrap">
       {cards.map((card) => {
         const isRed = card.suit === "hearts" || card.suit === "diamonds";
+        // const selected = selectedCards.some((sc) => sc.card.id === card.id);
         const selected = selectedCards.find((sc) => sc.card?.id === card.id);
 
-        const cardClass = clsx(
-          "w-16 h-24 text-sm rounded-lg border flex items-center justify-center p-1 relative flex-col transition-all duration-150",
-          selected
-            ? "border-yellow-400 border-4 bg-yellow-50 shadow-xl"
-            : "border-gray-300 border-2 bg-white",
-          card.value === "RED3" && "bg-red-50"
-        );
-
+        const cardBase =
+          "w-16 h-24 text-sm rounded-lg border flex items-center justify-center p-1 relative flex-col transition-all duration-150";
+        const borderColor = selected
+          ? "border-yellow-400 border-4"
+          : "border-gray-300 border-2";
+        const bgColor = selected ? "bg-yellow-50 shadow-xl" : "bg-white";
+        const red3Color = card.value === "RED3" ? "bg-red-50" : "";
         const textColor = isRed ? "text-red-600" : "text-gray-900";
 
         return (
           <Pressable key={card.id} onPress={() => handleCardClick(card)}>
-            <View className={cardClass}>
-              <Text className={clsx("font-bold -top-5 self-start", textColor)}>
+            <View
+              className={`${cardBase} ${borderColor} ${bgColor} ${red3Color}`}
+            >
+              <Text className={`font-bold -top-5 self-start ${textColor}`}>
                 {card.display}
               </Text>
               <Text
-                className={clsx(
-                  "text-2xl absolute top-1/3 left-1/2 transform -translate-x-1/3 translate-y-0.5",
-                  textColor
-                )}
+                className={`text-2xl absolute top-1/3 left-1/2 transform -translate-x-1/3 translate-y-0.5 ${textColor}`}
               >
                 {SUITS[card.suit]}
               </Text>
               <Text
-                className={clsx(
-                  "font-bold -bottom-5 self-end rotate-180",
-                  textColor
-                )}
+                className={`font-bold -bottom-5 self-end rotate-180 ${textColor}`}
               >
                 {card.display}
               </Text>
@@ -93,13 +97,7 @@ const TestScreen = () => {
           </Pressable>
         );
       })}
-      <View className="mt-8 pt-8">
-        <Link href="/(game)/test">
-          <Text>Go to Test Screen</Text>
-        </Link>
-      </View>
     </View>
   );
 };
-
 export default TestScreen;

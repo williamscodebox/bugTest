@@ -1,6 +1,7 @@
 import { CardType, SelectedCard } from "@/utils/types";
+import { useIsFocused } from "@react-navigation/native";
 import clsx from "clsx";
-import { Link } from "expo-router";
+import { useNavigation } from "expo-router";
 import { useState } from "react";
 import { Pressable, Text, View } from "react-native";
 
@@ -12,7 +13,10 @@ const SUITS = {
   joker: "★",
 };
 
-const TestScreen = () => {
+const Test = () => {
+  const isFocused = useIsFocused();
+  const navigation = useNavigation();
+  if (!navigation) return null;
   const [selectedCards, setSelectedCards] = useState<SelectedCard[]>([]);
 
   const cards: CardType[] = [
@@ -45,7 +49,7 @@ const TestScreen = () => {
       console.error("Card press crash:", err);
     }
   };
-
+  if (!isFocused) return null;
   return (
     <View className="flex-row flex-wrap">
       {cards.map((card) => {
@@ -93,13 +97,8 @@ const TestScreen = () => {
           </Pressable>
         );
       })}
-      <View className="mt-8 pt-8">
-        <Link href="/(game)/test">
-          <Text>Go to Test Screen</Text>
-        </Link>
-      </View>
     </View>
   );
 };
 
-export default TestScreen;
+export default Test;
