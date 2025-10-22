@@ -1,8 +1,7 @@
 import { CardType, SelectedCard } from "@/utils/types";
-import clsx from "clsx";
 import { Link } from "expo-router";
 import { useState } from "react";
-import { Pressable, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 
 const SUITS = {
   hearts: "♥",
@@ -34,72 +33,134 @@ const TestScreen = () => {
 
   const handleCardClick = (card: CardType) => {
     if (!card?.id) return;
-    try {
-      setSelectedCards((prev) => {
-        const alreadySelected = prev.find((sc) => sc.card?.id === card.id);
-        return alreadySelected
-          ? prev.filter((sc) => sc.card?.id !== card.id)
-          : [...prev, { card }];
-      });
-    } catch (err) {
-      console.error("Card press crash:", err);
-    }
+
+    setSelectedCards((prev) => {
+      const alreadySelected = prev.find((sc) => sc.card?.id === card.id);
+      return alreadySelected
+        ? prev.filter((sc) => sc.card?.id !== card.id)
+        : [...prev, { card }];
+    });
   };
 
   return (
-    <View className="flex-row flex-wrap">
+    <View style={styles.cardGrid}>
       {cards.map((card) => {
         const isRed = card.suit === "hearts" || card.suit === "diamonds";
         const selected = selectedCards.find((sc) => sc.card?.id === card.id);
 
-        const cardClass = clsx(
-          "w-16 h-24 text-sm rounded-lg border flex items-center justify-center p-1 relative flex-col transition-all duration-150",
-          selected
-            ? "border-yellow-400 border-4 bg-yellow-50 shadow-xl"
-            : "border-gray-300 border-2 bg-white",
-          card.value === "RED3" && "bg-red-50"
-        );
-
-        const textColor = isRed ? "text-red-600" : "text-gray-900";
+        const borderStyle = selected
+          ? styles.selectedBorder
+          : styles.defaultBorder;
+        const bgStyle = selected
+          ? styles.selectedBackground
+          : styles.defaultBackground;
+        const red3Style = card.value === "RED3" ? styles.red3Background : {};
+        const textColor = isRed ? styles.redText : styles.grayText;
 
         return (
           <Pressable key={card.id} onPress={() => handleCardClick(card)}>
-            <View className={cardClass}>
-              <Text className={clsx("font-bold -top-5 self-start", textColor)}>
+            <View style={[styles.cardBase, borderStyle, bgStyle, red3Style]}>
+              <Text style={[styles.cardCornerText, textColor]}>
                 {card.display}
               </Text>
-              <Text
-                className={clsx(
-                  "text-2xl absolute top-1/3 left-1/2 transform -translate-x-1/3 translate-y-0.5",
-                  textColor
-                )}
-              >
+              <Text style={[styles.cardSuit, textColor]}>
                 {SUITS[card.suit]}
               </Text>
               <Text
-                className={clsx(
-                  "font-bold -bottom-5 self-end rotate-180",
-                  textColor
-                )}
+                style={[styles.cardCornerText, textColor, styles.rotatedText]}
               >
                 {card.display}
               </Text>
               {selected && (
-                <View className="absolute top-1 right-1 bg-yellow-300 rounded-full p-1 z-10">
-                  <Text className="text-xs font-bold text-white">✓</Text>
+                <View style={styles.checkmarkBadge}>
+                  <Text style={styles.checkmarkText}>✓</Text>
                 </View>
               )}
             </View>
           </Pressable>
         );
       })}
-      <View className="mt-8 pt-8">
-        <Link href="/(game)/test">
-          <Text>Go to Test Screen</Text>
-        </Link>
+      <View className="m-8 p-8">
+        <Link href="/(game)/test">Go to Game Index</Link>
       </View>
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  cardGrid: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+  },
+  cardBase: {
+    width: 64,
+    height: 96,
+    borderRadius: 8,
+    borderWidth: 2,
+    padding: 4,
+    justifyContent: "center",
+    alignItems: "center",
+    position: "relative",
+    flexDirection: "column",
+  },
+  selectedBorder: {
+    borderColor: "#facc15", // yellow-400
+    borderWidth: 4,
+  },
+  defaultBorder: {
+    borderColor: "#d1d5db", // gray-300
+    borderWidth: 2,
+  },
+  selectedBackground: {
+    backgroundColor: "#fefce8", // yellow-50
+    shadowColor: "#000",
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 4,
+  },
+  defaultBackground: {
+    backgroundColor: "#ffffff",
+  },
+  red3Background: {
+    backgroundColor: "#fee2e2", // red-50
+  },
+  redText: {
+    color: "#dc2626", // red-600
+  },
+  grayText: {
+    color: "#1f2937", // gray-900
+  },
+  cardCornerText: {
+    fontWeight: "bold",
+    position: "absolute",
+    fontSize: 12,
+  },
+  rotatedText: {
+    bottom: 4,
+    right: 4,
+    transform: [{ rotate: "180deg" }],
+  },
+  cardSuit: {
+    fontSize: 24,
+    position: "absolute",
+    top: "40%",
+    left: "50%",
+    transform: [{ translateX: -12 }],
+  },
+  checkmarkBadge: {
+    position: "absolute",
+    top: 4,
+    right: 4,
+    backgroundColor: "#facc15", // yellow-300
+    borderRadius: 999,
+    padding: 4,
+    zIndex: 10,
+  },
+  checkmarkText: {
+    fontSize: 10,
+    fontWeight: "bold",
+    color: "#ffffff",
+  },
+});
 
 export default TestScreen;
